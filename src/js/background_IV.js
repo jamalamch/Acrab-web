@@ -9,18 +9,6 @@ let Ccolor
 
 let lines = []
 
-function gline(x, y, width, height) {
-    var lin = {
-        x : x,
-        y : y,
-        width : width,
-        height : height
-    }
-    lin.draw = function() {
-        line(this.x, this.y, this.width, this.height)
-    }
-    return lin;
-}
 function setup() {
     pixelDensity(2)
 
@@ -36,6 +24,7 @@ function setup() {
 
     step = width / (itter - 1)
     offset = step / 2
+    frameRate(10);
     init()
 }
 
@@ -62,4 +51,19 @@ function windowResized() {
     var Height = canvasDiv.clientHeight;
 
     resizeCanvas(windowWidth, Height);
+}
+
+function gline(x, y, width, height) {
+    var lin = {
+        x : x,
+        y : y,
+        width : width,
+        height : height
+    }
+    lin.draw = function() {
+        stroke(Bcolor)
+        strokeWeight(this.width)
+        line(this.x, this.y, this.x, this.y + this.height)
+    }
+    return lin;
 }
