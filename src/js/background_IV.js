@@ -2,10 +2,12 @@ let itter = 20
 let step
 let offset
 let strokeOffsetMin = 1
-let strokeOffsetMax = 40
+let strokeOffsetMax = 60
 
 let Bcolor
 let Ccolor
+
+let xoff = 0
 
 let lines = []
 
@@ -13,9 +15,12 @@ function setup() {
     pixelDensity(2)
 
     var canvasDiv = document.getElementById('backgroundP5');
-    var Height = canvasDiv.clientHeight;
 
-    var canvas = createCanvas(windowWidth, Height)
+    var Height = canvasDiv.clientHeight;
+    var Width = canvasDiv.clientWidth;
+
+    var canvas = createCanvas(Width, Height);
+
     canvas.parent('backgroundP5')
     canvas.id('sketch-container')
 
@@ -24,7 +29,7 @@ function setup() {
 
     step = width / (itter - 1)
     offset = step / 2
-    frameRate(10);
+    frameRate(30);
     init()
 }
 
@@ -41,29 +46,43 @@ function init() {
 
 function draw() {
     background(Ccolor)
+    xoff = xoff + .01;
     lines.forEach(element => {
         element.draw()
+        element.move(xoff)
     });
 }
 
 function windowResized() {
-    var canvasDiv = document.getElementById('backgroundP5');
-    var Height = canvasDiv.clientHeight;
+    var canvasDiv = document.getElementById('backgroundP5')
+    var Height = canvasDiv.clientHeight
+    var Width = canvasDiv.clientWidth
 
-    resizeCanvas(windowWidth, Height);
+
+    resizeCanvas(Width, Height)
 }
 
 function gline(x, y, width, height) {
+    if( typeof gline.counter == 'undefined' ) {
+        gline.counter = 0;
+    }
+    gline.counter ++;
     var lin = {
+        index : gline.counter,
         x : x,
         y : y,
         width : width,
-        height : height
+        height : height,
+        step : 0
     }
     lin.draw = function() {
         stroke(Bcolor)
         strokeWeight(this.width)
-        line(this.x, this.y, this.x, this.y + this.height)
+        line(this.x + this.step, this.y, this.x + this.step, this.y + this.height)
+    }
+    lin.move = function(xoff) {
+        noiseSeed(this.index)
+        this.step = noise(xoff) * windowWidth/5
     }
     return lin;
 }
